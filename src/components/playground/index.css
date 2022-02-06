@@ -1,0 +1,7 @@
+.dpdb__playground {
+  width: 100%;
+  height: 100%;
+}
+.dpdb__playground .CodeMirror {
+  height: 100%;
+}

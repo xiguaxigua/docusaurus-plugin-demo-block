@@ -1,0 +1,10 @@
+docs
+node_modules
+.DS_Store
+scripts
+.editorconfig
+.eslintrc
+.prettierrc
+babel.config.js
+tsconfig
+yarn.lock
