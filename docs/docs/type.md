@@ -7,9 +7,9 @@ sidebar_position: 4
 ## vanilla
 
 ```html vanilla
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {

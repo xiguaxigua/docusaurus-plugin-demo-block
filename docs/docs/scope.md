@@ -5,9 +5,9 @@ sidebar_position: 6
 # scope
 
 ```html vanilla live=true
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {

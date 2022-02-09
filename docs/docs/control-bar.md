@@ -7,9 +7,9 @@ sidebar_position: 5
 ## default
 
 ```html vanilla
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -25,9 +25,9 @@ const box = document.getElementById('box');
 ## hide all
 
 ```html vanilla showToggleButton=false&showCopyCodeButton=false&showCodepenLink=false&showJsfiddleLink=false&showCodesandboxLink=false
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -43,9 +43,9 @@ const box = document.getElementById('box');
 ## showToggleButton 
 
 ```html vanilla showToggleButton=true&showCopyCodeButton=false&showCodepenLink=false&showJsfiddleLink=false&showCodesandboxLink=false
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -61,9 +61,9 @@ const box = document.getElementById('box');
 ## showCopyCodeButton 
 
 ```html vanilla showToggleButton=false&showCopyCodeButton=true&showCodepenLink=false&showJsfiddleLink=false&showCodesandboxLink=false
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -79,9 +79,9 @@ const box = document.getElementById('box');
 ## showCodepenLink 
 
 ```html vanilla showToggleButton=false&showCopyCodeButton=false&showCodepenLink=true&showJsfiddleLink=false&showCodesandboxLink=false
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -97,9 +97,9 @@ const box = document.getElementById('box');
 ## showJsfiddleLink 
 
 ```html vanilla showToggleButton=false&showCopyCodeButton=false&showCodepenLink=false&showJsfiddleLink=true&showCodesandboxLink=false
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -115,9 +115,9 @@ const box = document.getElementById('box');
 ## showCodesandboxLink 
 
 ```html vanilla showToggleButton=false&showCopyCodeButton=false&showCodepenLink=false&showJsfiddleLink=false&showCodesandboxLink=true
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {

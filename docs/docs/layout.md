@@ -7,9 +7,9 @@ sidebar_position: 2
 ## row
 
 ```html vanilla layout='row'
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -26,9 +26,9 @@ const box = document.getElementById('box');
 ## row-reverse
 
 ```html vanilla layout='row-reverse'
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -45,9 +45,9 @@ const box = document.getElementById('box');
 ## column
 
 ```html vanilla layout='column'
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -64,9 +64,9 @@ const box = document.getElementById('box');
 ## column-reverse
 
 ```html vanilla layout='column-reverse'
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {

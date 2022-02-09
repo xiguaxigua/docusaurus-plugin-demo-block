@@ -7,9 +7,9 @@ sidebar_position: 7
 ## showCode=true
 
 ```html vanilla showCode=true
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -27,9 +27,9 @@ const box = document.getElementById('box');
 ## showCode=false
 
 ```html vanilla showCode=false
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -46,9 +46,9 @@ const box = document.getElementById('box');
 ## showCode=false&layout='column'
 
 ```html vanilla showCode=false&layout='column'
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {

@@ -3,7 +3,7 @@ import { CodeType } from '../types'
 import { Options } from '../types/option-type'
 
 async function getCodeFromVanilla(code: string) {
-  const html = getTagContent(code, 'html')
+  const html = getTagContent(code, 'template')
   const css = getTagContent(code, 'style')
   const js = getTagContent(code, 'script')
   return { html, css, js }

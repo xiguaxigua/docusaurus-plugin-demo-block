@@ -7,9 +7,9 @@ sidebar_position: 3
 ## live=true by default
 
 ```html vanilla live=true
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
@@ -26,9 +26,9 @@ const box = document.getElementById('box');
 ## live=false
 
 ```html vanilla live=false
-<html>
+<template>
   <div id="box">box</div>
-</html>
+</template>
 
 <style>
   #box {
