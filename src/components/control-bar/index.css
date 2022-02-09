@@ -19,6 +19,10 @@
   border-top: 1px solid #ccc;
 }
 
+html[data-theme='dark'] .dpdb__control-bar > div {
+  color: #ccc;
+}
+
 .dpdb__control-bar > div {
   width: 24px;
   height: 24px;
