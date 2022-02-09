@@ -67,6 +67,7 @@ async function build(target: string) {
 }
 
 if (IS_BUILD_MODE) {
+  build('docs/lib')
   build('lib')
 } else {
   build('docs/lib')
