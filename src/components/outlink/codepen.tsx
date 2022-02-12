@@ -11,20 +11,22 @@ const Codepen: FC<OutlinkProps> = ({
 }) => {
   const el = useRef<HTMLButtonElement>(null)
 
-  const jsLab: string[] = []
+  const jsLib = options.libSilenceImport?.js || []
+  const cssLib = options.libSilenceImport?.css || []
+
   if (type === 'react') {
-    jsLab.push(options.reactLib)
-    jsLab.push(options.reactDOMLib)
+    jsLib.push(options.reactLib)
+    jsLib.push(options.reactDOMLib)
   } else if (type === 'vue') {
-    jsLab.push(options.vueLib)
+    jsLib.push(options.vueLib)
   }
 
   const value = JSON.stringify({
     css,
     html,
     js: originJs,
-    js_external: jsLab.join(';'),
-    // css_external: cssLib.concat(getSettings('cssLib')).join(';'),
+    js_external: jsLib.join(';'),
+    css_external: cssLib.join(';'),
     js_pre_processor: 'babel',
   })
 

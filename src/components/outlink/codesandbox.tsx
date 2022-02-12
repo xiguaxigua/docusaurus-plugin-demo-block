@@ -8,8 +8,17 @@ const Codesandbox: FC<OutlinkProps> = ({
   originJs,
   bindSubmit,
   type,
+  options,
 }) => {
   const el = useRef<HTMLButtonElement>(null)
+
+  const jsLib = options.libSilenceImport?.js || []
+  const cssLib = options.libSilenceImport?.css || []
+
+  html += jsLib.map((url) => `<script src="${url}"></script>\n`).join('')
+  html += cssLib
+    .map((url) => `<link href="${url}" real="stylesheet"></link>\n`)
+    .join('')
 
   const dependencies: Record<string, string> = {}
   let js = originJs

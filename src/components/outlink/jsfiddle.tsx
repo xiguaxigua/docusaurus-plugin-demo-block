@@ -11,15 +11,17 @@ const Jsfiddle: FC<OutlinkProps> = ({
 }) => {
   const el = useRef<HTMLButtonElement>(null)
 
-  const jsLab: string[] = []
+  const jsLib = options.libSilenceImport?.js || []
+  const cssLib = options.libSilenceImport?.css || []
+
   if (type === 'react') {
-    jsLab.push(options.reactLib)
-    jsLab.push(options.reactDOMLib)
+    jsLib.push(options.reactLib)
+    jsLib.push(options.reactDOMLib)
   } else if (type === 'vue') {
-    jsLab.push(options.vueLib)
+    jsLib.push(options.vueLib)
   }
 
-  const resources = jsLab.join(',')
+  const resources = jsLib.concat(cssLib).join(',')
 
   useEffect(() => {
     if (el.current) {
