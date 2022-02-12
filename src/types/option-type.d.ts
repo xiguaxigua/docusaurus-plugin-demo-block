@@ -61,6 +61,10 @@ export type Options = {
    */
   showCodeByDefault?: boolean
   /**
+   * whether to show vconsole [default: false]
+   */
+  showVConsole?: boolean
+  /**
    * declare global variables corresponding to the base library [default: {}]
    * if you want to import not all or default module, such as:
    *   import { bar, baz } from 'foo'

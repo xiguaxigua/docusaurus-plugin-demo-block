@@ -123,7 +123,12 @@ function DemoBlock(props: CodeBlockPropsType) {
         )}
         {direction === 'column' && controlBar}
         <div className="dpdb__runner-wrapper">
-          <Runner {...runtimeCode} isDarkTheme={isDarkTheme} scope={scope} />
+          <Runner
+            {...runtimeCode}
+            isDarkTheme={isDarkTheme}
+            scope={scope}
+            options={options}
+          />
         </div>
       </div>
       {direction === 'row' && controlBar}

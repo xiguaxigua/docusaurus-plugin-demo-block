@@ -13,6 +13,7 @@ const DEFAULT_OPTIONS: Options = {
   showCodepenLink: true,
   showCodesandboxLink: true,
   showCopyCodeButton: true,
+  showVConsole: false,
   showToggleButton: true,
   vueLib: 'https://cdn.jsdelivr.net/npm/vue@3.2.30/dist/vue.global.prod.js',
   reactLib:
