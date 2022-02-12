@@ -12,6 +12,8 @@ import copy from 'copy-to-clipboard'
 import './index.css'
 import { Codepen } from '../outlink/codepen'
 import { TransformReturnValue } from '../../types'
+import { Jsfiddle } from '../outlink/jsfiddle'
+import { Codesandbox } from '../outlink/codesandbox'
 
 interface ControlBarProps extends TransformReturnValue {
   options: Options
@@ -91,12 +93,24 @@ const ControlBar: FC<ControlBarProps> = ({
         </div>
       )}
       {showJsfiddleLink && (
-        <div className="dpdb__tip" data-tip="open in jsfiddle">
+        <div
+          className="dpdb__tip"
+          data-tip="open in jsfiddle"
+          onClick={() => {
+            outlinkHandler.current.jsfiddle()
+          }}
+        >
           <IconJsfiddle />
         </div>
       )}
       {showCodesandboxLink && (
-        <div className="dpdb__tip" data-tip="open in codesandbox">
+        <div
+          className="dpdb__tip"
+          data-tip="open in codesandbox"
+          onClick={() => {
+            outlinkHandler.current.codesandbox()
+          }}
+        >
           <IconCodesandbox />
         </div>
       )}
@@ -109,6 +123,28 @@ const ControlBar: FC<ControlBarProps> = ({
         originJs={originJs}
         bindSubmit={(cb) => {
           outlinkHandler.current.codepen = cb
+        }}
+      />
+      <Jsfiddle
+        html={html}
+        css={css}
+        js={js}
+        type={type}
+        options={options}
+        originJs={originJs}
+        bindSubmit={(cb) => {
+          outlinkHandler.current.jsfiddle = cb
+        }}
+      />
+      <Codesandbox
+        html={html}
+        css={css}
+        js={js}
+        type={type}
+        options={options}
+        originJs={originJs}
+        bindSubmit={(cb) => {
+          outlinkHandler.current.codesandbox = cb
         }}
       />
     </div>

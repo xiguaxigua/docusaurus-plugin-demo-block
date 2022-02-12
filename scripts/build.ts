@@ -14,6 +14,7 @@ const EXTERNAL = [
   'react',
   'react-dom',
   'copy-to-clipboard',
+  'codesandbox/lib/api/define',
   'vue',
   '@babel/standalone',
   '@theme-init/CodeBlock',
