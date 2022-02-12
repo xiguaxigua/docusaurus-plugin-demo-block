@@ -4,19 +4,26 @@ import { Options } from '../types/option-type'
 
 const BABEL_PRESETS = ['env', 'react']
 
-async function getCodeFromVanilla(code: string): Promise<TransformReturnValue> {
+async function getCodeFromVanilla(
+  code: string,
+  useBabel: boolean
+): Promise<TransformReturnValue> {
   let html = ''
   let css = ''
   let js = ''
   let originJs = ''
   try {
-    const Babel = await getBabel()
     html = getTagContent(code, 'template')
     css = getTagContent(code, 'style')
     originJs = getTagContent(code, 'script')
-    js = Babel.transform(originJs, {
-      presets: BABEL_PRESETS,
-    }).code
+    const Babel = await getBabel()
+    if (useBabel) {
+      js = Babel.transform(originJs, {
+        presets: BABEL_PRESETS,
+      }).code
+    } else {
+      js = originJs
+    }
   } catch (err) {
     html = `<pre style="color: red">${err}</pre>`
   }
@@ -24,7 +31,10 @@ async function getCodeFromVanilla(code: string): Promise<TransformReturnValue> {
   return { html, css, js, originJs, type: 'vanilla' }
 }
 
-async function getCodeFromVue(code: string): Promise<TransformReturnValue> {
+async function getCodeFromVue(
+  code: string,
+  useBabel: boolean
+): Promise<TransformReturnValue> {
   let html = ''
   let css = ''
   let js = ''
@@ -35,14 +45,19 @@ async function getCodeFromVue(code: string): Promise<TransformReturnValue> {
     const script = getTagContent(code, 'script')
 
     const scriptTemp = script.replace('export default', 'var App =')
-    const Babel = await getBabel()
-    const transformedScript = Babel.transform(scriptTemp, {
-      presets: ['env'],
-    }).code
+    let scriptResult = ''
+    if (useBabel) {
+      const Babel = await getBabel()
+      scriptResult = Babel.transform(scriptTemp, {
+        presets: ['env'],
+      }).code
+    } else {
+      scriptResult = scriptTemp
+    }
 
     js = `
     var CONTAINER = document.getElementById('app');
-    ${transformedScript};
+    ${scriptResult};
     Vue.createApp(App).mount(CONTAINER);
   `
     originJs = `
@@ -58,19 +73,27 @@ Vue.createApp(App).mount(CONTAINER);
   return { html, css, js, originJs, type: 'vue' }
 }
 
-async function getCodeFromReact(code: string): Promise<TransformReturnValue> {
+async function getCodeFromReact(
+  code: string,
+  useBabel: boolean
+): Promise<TransformReturnValue> {
   let html = ''
   let js = ''
   let originJs = ''
   try {
-    const Babel = await getBabel()
-    const transformedScript = Babel.transform(code, {
-      presets: BABEL_PRESETS,
-    }).code
+    let scriptResult = ''
+    if (useBabel) {
+      const Babel = await getBabel()
+      scriptResult = Babel.transform(code, {
+        presets: BABEL_PRESETS,
+      }).code
+    } else {
+      scriptResult = code
+    }
 
     js = `
     var CONTAINER = document.getElementById('app');
-    ${transformedScript}
+    ${scriptResult}
   `
 
     originJs = `

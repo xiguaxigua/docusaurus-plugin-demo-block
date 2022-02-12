@@ -22,7 +22,7 @@ import './index.css'
 
 const GET_CODE_FUNCTION: Record<
   CodeType,
-  (code: string) => Promise<TransformReturnValue>
+  (code: string, useBabel: boolean) => Promise<TransformReturnValue>
 > = {
   vanilla: getCodeFromVanilla,
   vue: getCodeFromVue,
@@ -73,7 +73,10 @@ function DemoBlock(props: CodeBlockPropsType) {
 
   useEffect(() => {
     ;(async () => {
-      const runtimeCode = await GET_CODE_FUNCTION[getType(metastring)](code)
+      const runtimeCode = await GET_CODE_FUNCTION[getType(metastring)](
+        code,
+        options.babel
+      )
       setRuntimeCode(runtimeCode)
     })()
   }, [code])
