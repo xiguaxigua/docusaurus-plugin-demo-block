@@ -5,64 +5,81 @@ import { Options } from '../types/option-type'
 const BABEL_PRESETS = ['env', 'react']
 
 async function getCodeFromVanilla(code: string): Promise<TransformReturnValue> {
-  const Babel = await getBabel()
-  const html = getTagContent(code, 'template')
-  const css = getTagContent(code, 'style')
-  const js = getTagContent(code, 'script')
+  let html = ''
+  let css = ''
+  let js = ''
+  let originJs = ''
+  try {
+    const Babel = await getBabel()
+    html = getTagContent(code, 'template')
+    css = getTagContent(code, 'style')
+    originJs = getTagContent(code, 'script')
+    js = Babel.transform(originJs, {
+      presets: BABEL_PRESETS,
+    }).code
+  } catch (err) {
+    html = `<pre style="color: red">${err}</pre>`
+  }
 
-  const transformedScript = Babel.transform(js, {
-    presets: BABEL_PRESETS,
-  }).code
-
-  return { html, css, js: transformedScript, originJs: js, type: 'vanilla' }
+  return { html, css, js, originJs, type: 'vanilla' }
 }
 
 async function getCodeFromVue(code: string): Promise<TransformReturnValue> {
-  const template = getTagContent(code, 'template')
-  const css = getTagContent(code, 'style')
-  const js = getTagContent(code, 'script')
+  let html = ''
+  let css = ''
+  let js = ''
+  let originJs = ''
+  try {
+    const template = getTagContent(code, 'template')
+    css = getTagContent(code, 'style')
+    const script = getTagContent(code, 'script')
 
-  const Babel = await getBabel()
-  const transformedScript = Babel.transform(js, {
-    presets: ['env'],
-  }).code
+    const Babel = await getBabel()
+    const transformedScript = Babel.transform(script, {
+      presets: ['env'],
+    }).code
 
-  const runtimeJs = `
+    js = `
     var CONTAINER = document.getElementById('app');
     ${transformedScript};
   `
-
-  const originJs = `
+    originJs = `
     const CONTAINER = document.getElementById('app');
 ${js}
   `.trim()
-
-  return {
-    html: `<div id="app">${template}</div>`,
-    css,
-    js: runtimeJs,
-    originJs,
-    type: 'vue',
+    html = `<div id="app">${template}</div>`
+  } catch (err) {
+    html = `<pre style="color: red">${err}</pre>`
   }
+
+  return { html, css, js, originJs, type: 'vue' }
 }
 
 async function getCodeFromReact(code: string): Promise<TransformReturnValue> {
-  const Babel = await getBabel()
-  const transformedScript = Babel.transform(code, {
-    presets: BABEL_PRESETS,
-  }).code
+  let html = ''
+  let js = ''
+  let originJs = ''
+  try {
+    const Babel = await getBabel()
+    const transformedScript = Babel.transform(code, {
+      presets: BABEL_PRESETS,
+    }).code
 
-  const js = `
+    js = `
     var CONTAINER = document.getElementById('app');
     ${transformedScript}
   `
 
-  const originJs = `
+    originJs = `
     const CONTAINER = document.getElementById('app');
 ${code.trim()}
   `.trim()
+    html = '<div id="app"></div>'
+  } catch (err) {
+    html = `<pre style="color: red">${err}</pre>`
+  }
 
-  return { html: `<div id="app"></div>`, css: '', js, originJs, type: 'react' }
+  return { html, css: '', js, originJs, type: 'react' }
 }
 
 function getTagContent(code: string, tag: string) {

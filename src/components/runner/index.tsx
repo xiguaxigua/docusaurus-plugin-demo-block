@@ -38,7 +38,13 @@ const RunnerComp: FC<RunnerCompProps> = ({
           ;(contentWindow as any)[key] = scope[key]
         })
       }
-      contentDocument.body.innerHTML = `${html}<style>* { margin: 0; padding: 0; } html { padding: 20px; } ${css}</style>`
+      const style = contentDocument.createElement('style')
+      style.innerHTML = `
+        * { margin: 0; padding: 0; } html { padding: 20px; }
+        ${css}
+      `
+      contentDocument.head.appendChild(style)
+      contentDocument.body.innerHTML = html
 
       contentDocument.querySelector('html').dataset.theme = isDarkTheme
         ? 'dark'
@@ -47,7 +53,13 @@ const RunnerComp: FC<RunnerCompProps> = ({
       contentDocument.body.style.color = isDarkTheme
         ? 'rgb(245, 246, 247)'
         : 'rgb(28, 30, 33)'
-
+      js = `
+      try {
+        ${js}
+      } catch (e) {
+        document.body.innerHTML = '<pre style="color: red">' + e + '</pre>'
+      }
+      `
       if (options.showVConsole) {
         const vconsoleScript = contentDocument.createElement('script')
         vconsoleScript.src =
