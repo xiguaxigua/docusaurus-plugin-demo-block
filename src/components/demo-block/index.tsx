@@ -22,7 +22,11 @@ import './index.css'
 
 const GET_CODE_FUNCTION: Record<
   CodeType,
-  (code: string, useBabel: boolean) => Promise<TransformReturnValue>
+  (
+    code: string,
+    useBabel: boolean,
+    useIframe: boolean
+  ) => Promise<TransformReturnValue>
 > = {
   vanilla: getCodeFromVanilla,
   vue: getCodeFromVue,
@@ -75,7 +79,8 @@ function DemoBlock(props: CodeBlockPropsType) {
     ;(async () => {
       const runtimeCode = await GET_CODE_FUNCTION[getType(metastring)](
         code,
-        options.babel
+        options.babel,
+        options.iframe
       )
       setRuntimeCode(runtimeCode)
     })()

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, memo, FC, useState } from 'react'
+import { genId } from '../../utils/id'
 import { Options } from '../../types/option-type'
 import { sleep } from '../../utils/sleep'
 
@@ -21,70 +22,114 @@ const RunnerComp: FC<RunnerCompProps> = ({
   isDarkTheme,
   options,
 }) => {
-  const iframe = useRef<HTMLIFrameElement>(null)
+  const runner = useRef<HTMLIFrameElement | HTMLDivElement>(null)
   const [height, setHeight] = useState(1)
-  const [iframeVisible, setIframeVisible] = useState(false)
+  const [runnerVisible, setRunnerVisible] = useState(false)
+  const id = useRef(genId())
+
+  const setIframeRunner = () => {
+    const { contentDocument, contentWindow } =
+      runner.current as HTMLIFrameElement
+    if (scope) {
+      Object.keys(scope).forEach((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(contentWindow as any)[key] = scope[key]
+      })
+    }
+    const style = contentDocument.createElement('style')
+    style.innerHTML = `
+      * { margin: 0; padding: 0; } html { padding: 20px; }
+      ${css}
+    `
+    contentDocument.head.appendChild(style)
+    contentDocument.body.innerHTML = html
+
+    contentDocument.querySelector('html').dataset.theme = isDarkTheme
+      ? 'dark'
+      : 'light'
+
+    contentDocument.body.style.color = isDarkTheme
+      ? 'rgb(245, 246, 247)'
+      : 'rgb(28, 30, 33)'
+
+    js = `
+    try {
+      ${js}
+    } catch (e) {
+      document.body.innerHTML = '<pre style="color: red">' + e + '</pre>'
+    }
+    `
+
+    const script = contentDocument.createElement('script')
+    script.innerHTML = js
+    contentDocument.body.appendChild(script)
+
+    setHeight(contentDocument.body.scrollHeight)
+  }
+
+  const setDivRunner = () => {
+    if (scope) {
+      Object.keys(scope).forEach((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (!(window as any)[key]) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(window as any)[key] = scope[key]
+        }
+      })
+    }
+
+    const style = document.createElement('style')
+    style.innerHTML = css
+    document.head.appendChild(style)
+
+    runner.current.innerHTML = html
+
+    js = `
+    try {
+      ${js}
+    } catch (e) {
+      document.getElementById('${id.current}').innerHTML = '<pre style="color: red">' + e + '</pre>'
+    }
+    `
+
+    const script = document.createElement('script')
+    script.innerHTML = js
+    document.head.appendChild(script)
+  }
 
   useEffect(() => {
     if (!html && !css && !js) return
     ;(async () => {
-      setIframeVisible(false)
+      setRunnerVisible(false)
       await sleep(0)
-      setIframeVisible(true)
-      const { contentDocument, contentWindow } = iframe.current
-      if (scope) {
-        Object.keys(scope).forEach((key) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(contentWindow as any)[key] = scope[key]
-        })
-      }
-      const style = contentDocument.createElement('style')
-      style.innerHTML = `
-        * { margin: 0; padding: 0; } html { padding: 20px; }
-        ${css}
-      `
-      contentDocument.head.appendChild(style)
-      contentDocument.body.innerHTML = html
-
-      contentDocument.querySelector('html').dataset.theme = isDarkTheme
-        ? 'dark'
-        : 'light'
-
-      contentDocument.body.style.color = isDarkTheme
-        ? 'rgb(245, 246, 247)'
-        : 'rgb(28, 30, 33)'
-      js = `
-      try {
-        ${js}
-      } catch (e) {
-        document.body.innerHTML = '<pre style="color: red">' + e + '</pre>'
-      }
-      `
-      if (options.showVConsole) {
-        const vconsoleScript = contentDocument.createElement('script')
-        vconsoleScript.src =
-          'https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js'
-        vconsoleScript.onload = () => {
-          const script = contentDocument.createElement('script')
-          script.innerHTML = `var vConsole = new window.VConsole();${js}`
-          contentDocument.body.appendChild(script)
-        }
-        contentDocument.head.appendChild(vconsoleScript)
+      setRunnerVisible(true)
+      if (options.iframe) {
+        setIframeRunner()
       } else {
-        const script = contentDocument.createElement('script')
-        script.innerHTML = js
-        contentDocument.body.appendChild(script)
+        setDivRunner()
       }
-
-      setHeight(contentDocument.body.scrollHeight)
     })()
   }, [html, css, js, scope, isDarkTheme])
 
   return (
     <>
-      {iframeVisible && (
-        <iframe height={height} className="dpdb__runner" ref={iframe} />
-      )}
+      {runnerVisible &&
+        (options.iframe ? (
+          <iframe
+            height={height}
+            className="dpdb__runner"
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ref={runner as any}
+          />
+        ) : (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          <div
+            id={id.current}
+            style={{ padding: 20 }}
+            className="dpdb__runner"
+            ref={runner as any}
+          />
+        ))}
     </>
   )
 }

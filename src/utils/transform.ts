@@ -1,21 +1,28 @@
 import type babel from '@babel/standalone'
 import { CodeType, TransformReturnValue } from '../types'
 import { Options } from '../types/option-type'
+import { genId } from './id'
 
 const BABEL_PRESETS = ['env', 'react']
 
 async function getCodeFromVanilla(
   code: string,
-  useBabel: boolean
+  useBabel: boolean,
+  useIframe: boolean
 ): Promise<TransformReturnValue> {
   let html = ''
   let css = ''
   let js = ''
   let originJs = ''
+  const containerId = useIframe ? 'app' : genId()
   try {
     html = getTagContent(code, 'template')
     css = getTagContent(code, 'style')
     originJs = getTagContent(code, 'script')
+    originJs = `
+    var CONTAINER = document.getElementById('${containerId}');
+    ${originJs}
+    `
     const Babel = await getBabel()
     if (useBabel) {
       js = Babel.transform(originJs, {
@@ -33,7 +40,8 @@ async function getCodeFromVanilla(
 
 async function getCodeFromVue(
   code: string,
-  useBabel: boolean
+  useBabel: boolean,
+  useIframe: boolean
 ): Promise<TransformReturnValue> {
   let html = ''
   let css = ''
@@ -43,6 +51,7 @@ async function getCodeFromVue(
     const template = getTagContent(code, 'template')
     css = getTagContent(code, 'style')
     const script = getTagContent(code, 'script')
+    const containerId = useIframe ? 'app' : genId()
 
     const scriptTemp = script.replace('export default', 'var App =')
     let scriptResult = ''
@@ -56,16 +65,16 @@ async function getCodeFromVue(
     }
 
     js = `
-    var CONTAINER = document.getElementById('app');
+    var CONTAINER = document.getElementById('${containerId}');
     ${scriptResult};
     Vue.createApp(App).mount(CONTAINER);
   `
     originJs = `
-    const CONTAINER = document.getElementById('app');
+    const CONTAINER = document.getElementById('${containerId}');
 ${scriptTemp}
 Vue.createApp(App).mount(CONTAINER);
   `.trim()
-    html = `<div id="app">${template}</div>`
+    html = `<div id="${containerId}">${template}</div>`
   } catch (err) {
     html = `<pre style="color: red">${err}</pre>`
   }
@@ -75,11 +84,14 @@ Vue.createApp(App).mount(CONTAINER);
 
 async function getCodeFromReact(
   code: string,
-  useBabel: boolean
+  useBabel: boolean,
+  useIframe: boolean
 ): Promise<TransformReturnValue> {
   let html = ''
   let js = ''
   let originJs = ''
+  const containerId = useIframe ? 'app' : genId()
+
   try {
     let scriptResult = ''
     if (useBabel) {
@@ -92,15 +104,15 @@ async function getCodeFromReact(
     }
 
     js = `
-    var CONTAINER = document.getElementById('app');
+    var CONTAINER = document.getElementById('${containerId}');
     ${scriptResult}
   `
 
     originJs = `
-    const CONTAINER = document.getElementById('app');
+    const CONTAINER = document.getElementById('${containerId}');
 ${code.trim()}
   `.trim()
-    html = '<div id="app"></div>'
+    html = `<div id="${containerId}"></div>`
   } catch (err) {
     html = `<pre style="color: red">${err}</pre>`
   }
