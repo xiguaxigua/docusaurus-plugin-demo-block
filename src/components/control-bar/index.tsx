@@ -59,7 +59,7 @@ const ControlBar: FC<ControlBarProps> = ({
 
   return (
     <div className={`dpdb__control-bar dpdb__control-bar-${layout}`}>
-      {showToggleButton && (
+      {showToggleButton && options.showCode && (
         <div
           className="dpdb__tip"
           data-tip={`${codeVisible ? 'hide' : 'show'} code`}
