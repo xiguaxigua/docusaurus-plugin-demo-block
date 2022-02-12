@@ -37,6 +37,8 @@ function DemoBlock(props: CodeBlockPropsType) {
     html: '',
     css: '',
     js: '',
+    originJs: '',
+    type: 'vanilla',
   })
 
   const { isDarkTheme } = useColorMode()
@@ -78,6 +80,22 @@ function DemoBlock(props: CodeBlockPropsType) {
 
   const direction = layout.split('-')[0]
 
+  const controlBar = (
+    <ControlBar
+      html={runtimeCode.html}
+      css={runtimeCode.css}
+      js={runtimeCode.js}
+      type={runtimeCode.type}
+      originJs={runtimeCode.originJs}
+      options={options}
+      code={children}
+      codeVisible={codeVisible}
+      onToggleCode={(visible) => {
+        setCodeVisible(visible)
+      }}
+    />
+  )
+
   return (
     <div className="dpdb">
       <div
@@ -103,30 +121,12 @@ function DemoBlock(props: CodeBlockPropsType) {
             )}
           </div>
         )}
-        {direction === 'column' && (
-          <ControlBar
-            options={options}
-            code={children}
-            codeVisible={codeVisible}
-            onToggleCode={(visible) => {
-              setCodeVisible(visible)
-            }}
-          />
-        )}
+        {direction === 'column' && controlBar}
         <div className="dpdb__runner-wrapper">
           <Runner {...runtimeCode} isDarkTheme={isDarkTheme} scope={scope} />
         </div>
       </div>
-      {direction === 'row' && (
-        <ControlBar
-          options={options}
-          code={children}
-          codeVisible={codeVisible}
-          onToggleCode={(visible) => {
-            setCodeVisible(visible)
-          }}
-        />
-      )}
+      {direction === 'row' && controlBar}
     </div>
   )
 }

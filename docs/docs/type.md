@@ -31,30 +31,31 @@ const box = document.getElementById('box');
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        foo: "foo"
-      }
-    },
-    created () {
-      console.log('created')
+const App = {
+  data() {
+    return {
+      foo: "foo"
     }
+  },
+  created () {
+    console.log('created')
   }
+}
+Vue.createApp(App).mount(CONTAINER);
 </script>
 
 <style>
-  #box {
-    border: 1px solid red;
-  }
+#box {
+  border: 1px solid red;
+}
 </style>
 ```
 
 ## react
 
 ```jsx react
-export function App () {
-  useEffect(() => {
+function App () {
+  React.useEffect(() => {
     console.log('mounted')
   }, [])
   return (
@@ -62,9 +63,13 @@ export function App () {
   )
 }
 
-export const style = `
+document.head.innerHTML += `
+<style>
   #box {
     border: 1px solid red;
   }
+</style>
 `
+
+ReactDOM.render(<App />, CONTAINER);
 ```

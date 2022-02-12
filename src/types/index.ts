@@ -4,6 +4,8 @@ type TransformReturnValue = {
   html: string
   css: string
   js: string
+  originJs: string
+  type: CodeType
 }
 
 interface CodeBlockPropsType {

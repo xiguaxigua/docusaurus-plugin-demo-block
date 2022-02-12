@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useRef } from 'react'
 import { Options } from '../../types/option-type'
 import {
   IconCode,
@@ -10,8 +10,10 @@ import {
 import copy from 'copy-to-clipboard'
 
 import './index.css'
+import { Codepen } from '../outlink/codepen'
+import { TransformReturnValue } from '../../types'
 
-interface ControlBarProps {
+interface ControlBarProps extends TransformReturnValue {
   options: Options
   code: string
   codeVisible: boolean
@@ -23,8 +25,12 @@ const ControlBar: FC<ControlBarProps> = ({
   code,
   onToggleCode,
   codeVisible,
+  html,
+  css,
+  js,
+  type,
+  originJs,
 }) => {
-  console.log('options', options)
   const {
     layout,
     showCodepenLink,
@@ -33,6 +39,11 @@ const ControlBar: FC<ControlBarProps> = ({
     showToggleButton,
     showCopyCodeButton,
   } = options
+  const outlinkHandler = useRef({
+    codepen: null,
+    codesandbox: null,
+    jsfiddle: null,
+  })
 
   if (
     !showToggleButton &&
@@ -69,7 +80,13 @@ const ControlBar: FC<ControlBarProps> = ({
         </div>
       )}
       {showCodepenLink && (
-        <div className="dpdb__tip" data-tip="open in codepen">
+        <div
+          className="dpdb__tip"
+          data-tip="open in codepen"
+          onClick={() => {
+            outlinkHandler.current.codepen()
+          }}
+        >
           <IconCodepen />
         </div>
       )}
@@ -83,6 +100,17 @@ const ControlBar: FC<ControlBarProps> = ({
           <IconCodesandbox />
         </div>
       )}
+      <Codepen
+        html={html}
+        css={css}
+        js={js}
+        type={type}
+        options={options}
+        originJs={originJs}
+        bindSubmit={(cb) => {
+          outlinkHandler.current.codepen = cb
+        }}
+      />
     </div>
   )
 }

@@ -1,55 +1,68 @@
 import type babel from '@babel/standalone'
-import { CodeType } from '../types'
+import { CodeType, TransformReturnValue } from '../types'
 import { Options } from '../types/option-type'
 
-async function getCodeFromVanilla(code: string) {
+const BABEL_PRESETS = ['env', 'react']
+
+async function getCodeFromVanilla(code: string): Promise<TransformReturnValue> {
+  const Babel = await getBabel()
   const html = getTagContent(code, 'template')
   const css = getTagContent(code, 'style')
   const js = getTagContent(code, 'script')
-  return { html, css, js }
+
+  const transformedScript = Babel.transform(js, {
+    presets: BABEL_PRESETS,
+  }).code
+
+  return { html, css, js: transformedScript, originJs: js, type: 'vanilla' }
 }
 
-async function getCodeFromVue(code: string) {
+async function getCodeFromVue(code: string): Promise<TransformReturnValue> {
   const template = getTagContent(code, 'template')
   const css = getTagContent(code, 'style')
   const js = getTagContent(code, 'script')
 
   const Babel = await getBabel()
   const transformedScript = Babel.transform(js, {
-    presets: [Babel.availablePresets.env],
+    presets: ['env'],
   }).code
 
   const runtimeJs = `
-    var comp = (function(exports){
-      var module={};
-      module.exports=exports;
-      ${transformedScript};
-      return module.exports.__esModule?module.exports.default:module.exports;
-    })({});
-    Vue.createApp(comp).mount(document.getElementById('app'))
+    var CONTAINER = document.getElementById('app');
+    ${transformedScript};
   `
 
-  return { html: `<div id="app">${template}</div>`, css, js: runtimeJs }
+  const originJs = `
+    const CONTAINER = document.getElementById('app');
+${js}
+  `.trim()
+
+  return {
+    html: `<div id="app">${template}</div>`,
+    css,
+    js: runtimeJs,
+    originJs,
+    type: 'vue',
+  }
 }
 
-async function getCodeFromReact(code: string) {
+async function getCodeFromReact(code: string): Promise<TransformReturnValue> {
   const Babel = await getBabel()
   const transformedScript = Babel.transform(code, {
-    presets: ['es2015', 'react'],
+    presets: BABEL_PRESETS,
   }).code
 
-  const runtimeJs = `
-    var { App, style } = (function(exports){
-      var module={};
-      module.exports=exports;
-      ${transformedScript};
-      return module.exports;
-    })({});
-    document.body.innerHTML += "<style>" + style + "</style>";
-    ReactDOM.render(React.createElement(App, null), document.getElementById('app'));
+  const js = `
+    var CONTAINER = document.getElementById('app');
+    ${transformedScript}
   `
 
-  return { html: `<div id="app"></div>`, css: '', js: runtimeJs }
+  const originJs = `
+    const CONTAINER = document.getElementById('app');
+${code.trim()}
+  `.trim()
+
+  return { html: `<div id="app"></div>`, css: '', js, originJs, type: 'react' }
 }
 
 function getTagContent(code: string, tag: string) {

@@ -14,6 +14,11 @@ const DEFAULT_OPTIONS: Options = {
   showCodesandboxLink: true,
   showCopyCodeButton: true,
   showToggleButton: true,
+  vueLib: 'https://cdn.jsdelivr.net/npm/vue@3.2.30/dist/vue.global.prod.js',
+  reactLib:
+    'https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.production.min.js',
+  reactDOMLib:
+    'https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.production.min.js',
 }
 
 export { DEFAULT_OPTIONS }

@@ -75,4 +75,19 @@ export type Options = {
    * display in code section
    */
   libSilenceImport?: { js?: string[]; css?: string[] }
+  /**
+   * vue base lib from codepen / jsfiddle
+   * default is https://cdn.jsdelivr.net/npm/vue@3.2.30/dist/vue.global.prod.js
+   */
+  vueLib?: string
+  /**
+   * react base lib from codepen / jsfiddle
+   * default is https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.production.min.js
+   */
+  reactLib?: string
+  /**
+   * reactDOM base lib from codepen / jsfiddle
+   * default is https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.production.min.js
+   */
+  reactDOMLib?: string
 }
