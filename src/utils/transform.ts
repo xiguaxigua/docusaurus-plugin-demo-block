@@ -34,18 +34,21 @@ async function getCodeFromVue(code: string): Promise<TransformReturnValue> {
     css = getTagContent(code, 'style')
     const script = getTagContent(code, 'script')
 
+    const scriptTemp = script.replace('export default', 'var App =')
     const Babel = await getBabel()
-    const transformedScript = Babel.transform(script, {
+    const transformedScript = Babel.transform(scriptTemp, {
       presets: ['env'],
     }).code
 
     js = `
     var CONTAINER = document.getElementById('app');
     ${transformedScript};
+    Vue.createApp(App).mount(CONTAINER);
   `
     originJs = `
     const CONTAINER = document.getElementById('app');
-${js}
+${scriptTemp}
+Vue.createApp(App).mount(CONTAINER);
   `.trim()
     html = `<div id="app">${template}</div>`
   } catch (err) {

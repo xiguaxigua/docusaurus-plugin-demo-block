@@ -31,7 +31,7 @@ const box = document.getElementById('box');
 </template>
 
 <script>
-const App = {
+export default {
   data() {
     return {
       foo: "foo"
@@ -41,7 +41,6 @@ const App = {
     console.log('created')
   }
 }
-Vue.createApp(App).mount(CONTAINER);
 </script>
 
 <style>
