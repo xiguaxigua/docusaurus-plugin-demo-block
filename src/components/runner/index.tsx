@@ -57,6 +57,7 @@ const RunnerComp: FC<RunnerCompProps> = ({
       ${js}
     } catch (e) {
       document.body.innerHTML = '<pre style="color: red">' + e + '</pre>'
+      console.error(e)
     }
     `
 
@@ -89,6 +90,7 @@ const RunnerComp: FC<RunnerCompProps> = ({
       ${js}
     } catch (e) {
       document.getElementById('${id.current}').innerHTML = '<pre style="color: red">' + e + '</pre>'
+      console.error(e)
     }
     `
 

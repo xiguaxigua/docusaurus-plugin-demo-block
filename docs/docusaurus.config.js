@@ -40,12 +40,7 @@ const config = {
     [
       path.resolve(__dirname, './lib/index.js'),
       /** @type {import('./lib/option-type').Options} */
-      ({
-        babel: true,
-        live: true,
-        layout: 'row',
-        scope,
-      }),
+      ({}),
     ],
   ],
 

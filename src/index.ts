@@ -32,6 +32,10 @@ export default function demoBlock(
     },
 
     configureWebpack() {
+      const vueAliasPath =
+        options.vueVersion === 2
+          ? require.resolve('vue/dist/vue.esm.js')
+          : require.resolve('vue/dist/vue.esm-bundler.js')
       return {
         resolve: {
           fallback: {
@@ -40,7 +44,7 @@ export default function demoBlock(
             buffer: require.resolve('buffer/'),
           },
           alias: {
-            vue: require.resolve('vue/dist/vue.esm-bundler.js'),
+            vue: vueAliasPath,
           },
         },
         plugins: [

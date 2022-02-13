@@ -76,6 +76,10 @@ export type Options = {
    */
   libSilenceImport?: { js?: string[]; css?: string[] }
   /**
+   * vue version for your component [default: 3]
+   */
+  vueVersion?: 2 | 3
+  /**
    * vue base lib from codepen / jsfiddle
    * default is https://cdn.jsdelivr.net/npm/vue@3.2.30/dist/vue.global.prod.js
    */

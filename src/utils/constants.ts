@@ -1,5 +1,10 @@
 import { Options } from '../types/option-type'
 
+const VUE_LIB = {
+  2: 'https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js',
+  3: 'https://cdn.jsdelivr.net/npm/vue@3.2.30/dist/vue.global.prod.js',
+}
+
 const DEFAULT_OPTIONS: Options = {
   babel: true,
   iframe: true,
@@ -14,11 +19,12 @@ const DEFAULT_OPTIONS: Options = {
   showCodesandboxLink: true,
   showCopyCodeButton: true,
   showToggleButton: true,
-  vueLib: 'https://cdn.jsdelivr.net/npm/vue@3.2.30/dist/vue.global.prod.js',
+  vueVersion: 3,
+  vueLib: VUE_LIB[3],
   reactLib:
     'https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.production.min.js',
   reactDOMLib:
     'https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.production.min.js',
 }
 
-export { DEFAULT_OPTIONS }
+export { DEFAULT_OPTIONS, VUE_LIB }

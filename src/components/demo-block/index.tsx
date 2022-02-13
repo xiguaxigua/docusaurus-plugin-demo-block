@@ -14,7 +14,7 @@ import { useDebounceFn } from '../../utils/hooks'
 import { usePluginData } from '@docusaurus/useGlobalData'
 import { useColorMode } from '@docusaurus/theme-common'
 import { Options } from '../../types/option-type'
-import { DEFAULT_OPTIONS } from '../../utils/constants'
+import { DEFAULT_OPTIONS, VUE_LIB } from '../../utils/constants'
 import CodeBlock from '@theme-init/CodeBlock'
 import { ControlBar } from '../control-bar'
 
@@ -22,11 +22,7 @@ import './index.css'
 
 const GET_CODE_FUNCTION: Record<
   CodeType,
-  (
-    code: string,
-    useBabel: boolean,
-    useIframe: boolean
-  ) => Promise<TransformReturnValue>
+  (code: string, options: Options) => Promise<TransformReturnValue>
 > = {
   vanilla: getCodeFromVanilla,
   vue: getCodeFromVue,
@@ -49,8 +45,15 @@ function DemoBlock(props: CodeBlockPropsType) {
   const customOptions: Options = usePluginData('docusaurus-plugin-demo-block')
   const localOptions = getLocalOptions(metastring)
 
+  const vueVersion =
+    customOptions.vueVersion ||
+    localOptions.vueVersion ||
+    DEFAULT_OPTIONS.vueVersion
+  const vueLib = VUE_LIB[vueVersion as 2 | 3]
+
   const options: Options = {
     ...DEFAULT_OPTIONS,
+    vueLib,
     ...customOptions,
     ...localOptions,
   }
@@ -79,8 +82,7 @@ function DemoBlock(props: CodeBlockPropsType) {
     ;(async () => {
       const runtimeCode = await GET_CODE_FUNCTION[getType(metastring)](
         code,
-        options.babel,
-        options.iframe
+        options
       )
       setRuntimeCode(runtimeCode)
     })()
