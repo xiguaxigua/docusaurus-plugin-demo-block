@@ -39,6 +39,7 @@ function DemoBlock(props: CodeBlockPropsType) {
     js: '',
     originJs: '',
     type: 'vanilla',
+    libs: [],
   })
 
   const { isDarkTheme } = useColorMode()
@@ -92,11 +93,7 @@ function DemoBlock(props: CodeBlockPropsType) {
 
   const controlBar = (
     <ControlBar
-      html={runtimeCode.html}
-      css={runtimeCode.css}
-      js={runtimeCode.js}
-      type={runtimeCode.type}
-      originJs={runtimeCode.originJs}
+      {...runtimeCode}
       options={options}
       code={children}
       codeVisible={codeVisible}

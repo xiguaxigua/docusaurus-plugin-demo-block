@@ -6,6 +6,7 @@ type TransformReturnValue = {
   js: string
   originJs: string
   type: CodeType
+  libs: string[]
 }
 
 interface CodeBlockPropsType {

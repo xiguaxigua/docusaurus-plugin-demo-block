@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef } from 'react'
 import { OutlinkProps } from './type'
 import { getParameters } from 'codesandbox/lib/api/define'
+import { unique } from '../../utils/unique'
 
 const Codesandbox: FC<OutlinkProps> = ({
   html,
@@ -9,24 +10,47 @@ const Codesandbox: FC<OutlinkProps> = ({
   bindSubmit,
   type,
   options,
+  libs,
 }) => {
   const el = useRef<HTMLButtonElement>(null)
 
-  const jsLib = options.libSilenceImport?.js || []
+  let jsLib = options.libSilenceImport?.js || []
   const cssLib = options.libSilenceImport?.css || []
 
-  html += jsLib.map((url) => `<script src="${url}"></script>\n`).join('')
-  html += cssLib
+  if (libs.length) {
+    jsLib.push(...libs)
+  }
+
+  jsLib = unique(jsLib)
+  let libScript = ''
+  libScript += jsLib.map((url) => `<script src="${url}"></script>\n`).join('')
+  libScript += cssLib
     .map((url) => `<link href="${url}" real="stylesheet"></link>\n`)
     .join('')
+
+  const HTMLTpl = `
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0">
+      ${libScript}
+  </head>
+    <body>
+      ${html}
+    </body>
+  </html>
+  `
 
   const dependencies: Record<string, string> = {}
   let js = originJs
 
   js = `
 import "./index.css";
-
-${js}  
+window.onload = function () {
+  ${js}  
+}
   `.trim()
 
   if (type === 'react') {
@@ -62,7 +86,7 @@ ${js}
         isBinary: false,
       },
       'index.html': {
-        content: html,
+        content: HTMLTpl,
         isBinary: false,
       },
       'index.css': {

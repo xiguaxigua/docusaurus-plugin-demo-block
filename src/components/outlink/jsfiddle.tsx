@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react'
 import { OutlinkProps } from './type'
+import { unique } from '../../utils/unique'
 
 const Jsfiddle: FC<OutlinkProps> = ({
   html,
@@ -8,10 +9,11 @@ const Jsfiddle: FC<OutlinkProps> = ({
   bindSubmit,
   options,
   type,
+  libs,
 }) => {
   const el = useRef<HTMLButtonElement>(null)
 
-  const jsLib = options.libSilenceImport?.js || []
+  let jsLib = options.libSilenceImport?.js || []
   const cssLib = options.libSilenceImport?.css || []
 
   if (type === 'react') {
@@ -20,6 +22,12 @@ const Jsfiddle: FC<OutlinkProps> = ({
   } else if (type === 'vue') {
     jsLib.push(options.vueLib)
   }
+
+  if (libs.length) {
+    jsLib.push(...libs)
+  }
+
+  jsLib = unique(jsLib)
 
   const resources = jsLib.concat(cssLib).join(',')
 

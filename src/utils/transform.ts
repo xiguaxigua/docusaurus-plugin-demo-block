@@ -13,11 +13,15 @@ async function getCodeFromVanilla(
   let css = ''
   let js = ''
   let originJs = ''
+  let libs: string[] = []
   const containerId = options.iframe ? 'app' : genId()
   try {
     html = getTagContent(code, 'template')
     css = getTagContent(code, 'style')
     originJs = getTagContent(code, 'script')
+    const handleImportResult = handleImport(originJs, options)
+    originJs = handleImportResult.formattedScript
+    libs = handleImportResult.libs
     originJs = `
     var CONTAINER = document.getElementById('${containerId}');
     ${originJs}
@@ -35,7 +39,7 @@ async function getCodeFromVanilla(
     console.error(e)
   }
 
-  return { html, css, js, originJs, type: 'vanilla' }
+  return { html, css, js, originJs, type: 'vanilla', libs }
 }
 
 async function getCodeFromVue(
@@ -46,13 +50,19 @@ async function getCodeFromVue(
   let css = ''
   let js = ''
   let originJs = ''
+  let libs: string[] = []
+  const containerId = options.iframe ? 'app' : genId()
+
   try {
     const template = getTagContent(code, 'template')
     css = getTagContent(code, 'style')
     const script = getTagContent(code, 'script')
-    const containerId = options.iframe ? 'app' : genId()
 
-    const scriptTemp = script.replace('export default', 'var App =')
+    const handleImportResult = handleImport(script, options)
+    let scriptTemp = handleImportResult.formattedScript
+    libs = handleImportResult.libs
+
+    scriptTemp = scriptTemp.replace('export default', 'var App =')
     let scriptResult = ''
     if (options.babel) {
       const Babel = await getBabel()
@@ -66,6 +76,7 @@ async function getCodeFromVue(
       options.vueVersion === 3
         ? 'Vue.createApp(App).mount(CONTAINER);'
         : 'new (Vue.default || Vue)(App).$mount(CONTAINER);'
+
     js = `
     var CONTAINER = document.getElementById('${containerId}');
     ${scriptResult}
@@ -82,7 +93,7 @@ ${mountScript}
     console.error(e)
   }
 
-  return { html, css, js, originJs, type: 'vue' }
+  return { html, css, js, originJs, type: 'vue', libs }
 }
 
 async function getCodeFromReact(
@@ -92,17 +103,21 @@ async function getCodeFromReact(
   let html = ''
   let js = ''
   let originJs = ''
+  let libs: string[] = []
   const containerId = options.iframe ? 'app' : genId()
 
   try {
     let scriptResult = ''
+
+    const handleImportResult = handleImport(code, options)
+    scriptResult = handleImportResult.formattedScript
+    libs = handleImportResult.libs
+
     if (options.babel) {
       const Babel = await getBabel()
-      scriptResult = Babel.transform(code, {
+      scriptResult = Babel.transform(scriptResult, {
         presets: BABEL_PRESETS,
       }).code
-    } else {
-      scriptResult = code
     }
 
     js = `
@@ -120,7 +135,7 @@ ${code.trim()}
     console.error(e)
   }
 
-  return { html, css: '', js, originJs, type: 'react' }
+  return { html, css: '', js, originJs, type: 'react', libs }
 }
 
 function getTagContent(code: string, tag: string) {
@@ -159,6 +174,36 @@ function getLocalOptions(metastring: string) {
       acc[key] = new Function(`return ${value}`)()
       return acc
     }, {}) as Options
+}
+
+function handleImport(script: string, options: Options) {
+  const result = {
+    origin: script,
+    libs: [] as string[],
+    formattedScript: script,
+  }
+  const regexp = /\s*import\s+([\s|\S]+?)\s*from\s+['|"]([\S]+)['|"]/gm
+  if (!regexp.test(script)) {
+    return result
+  }
+  const matchResult = script.match(regexp)
+  matchResult.forEach((item: string) => {
+    result.formattedScript = result.formattedScript.replace(item, '')
+    const itemName = item.match(/['|"]([\S]+)['|"]/)[1]
+    const { globalName, link } = options.libGlobalName[itemName]
+
+    result.libs.push(link)
+
+    if (item.includes('{')) {
+      const insertScript = item
+        .replace('import', 'var')
+        .replace('from', '=')
+        .replace(/['|"]([\S]+)['|"]/, globalName)
+      result.formattedScript = `${insertScript}\n${result.formattedScript}`
+    }
+  })
+
+  return result
 }
 
 export {

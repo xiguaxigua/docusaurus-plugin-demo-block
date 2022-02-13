@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react'
+import { unique } from '../../utils/unique'
 import { OutlinkProps } from './type'
 
 const Codepen: FC<OutlinkProps> = ({
@@ -8,10 +9,11 @@ const Codepen: FC<OutlinkProps> = ({
   bindSubmit,
   options,
   type,
+  libs,
 }) => {
   const el = useRef<HTMLButtonElement>(null)
 
-  const jsLib = options.libSilenceImport?.js || []
+  let jsLib = options.libSilenceImport?.js || []
   const cssLib = options.libSilenceImport?.css || []
 
   if (type === 'react') {
@@ -20,6 +22,12 @@ const Codepen: FC<OutlinkProps> = ({
   } else if (type === 'vue') {
     jsLib.push(options.vueLib)
   }
+
+  if (libs.length) {
+    jsLib.push(...libs)
+  }
+
+  jsLib = unique(jsLib)
 
   const value = JSON.stringify({
     css,

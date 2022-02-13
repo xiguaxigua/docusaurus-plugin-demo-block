@@ -31,6 +31,7 @@ const ControlBar: FC<ControlBarProps> = ({
   css,
   js,
   type,
+  libs,
   originJs,
 }) => {
   const {
@@ -103,7 +104,7 @@ const ControlBar: FC<ControlBarProps> = ({
           <IconJsfiddle />
         </div>
       )}
-      {showCodesandboxLink && (
+      {/* {showCodesandboxLink && (
         <div
           className="dpdb__tip"
           data-tip="open in codesandbox"
@@ -113,13 +114,14 @@ const ControlBar: FC<ControlBarProps> = ({
         >
           <IconCodesandbox />
         </div>
-      )}
+      )} */}
       <Codepen
         html={html}
         css={css}
         js={js}
         type={type}
         options={options}
+        libs={libs}
         originJs={originJs}
         bindSubmit={(cb) => {
           outlinkHandler.current.codepen = cb
@@ -131,6 +133,7 @@ const ControlBar: FC<ControlBarProps> = ({
         js={js}
         type={type}
         options={options}
+        libs={libs}
         originJs={originJs}
         bindSubmit={(cb) => {
           outlinkHandler.current.jsfiddle = cb
@@ -142,6 +145,7 @@ const ControlBar: FC<ControlBarProps> = ({
         js={js}
         type={type}
         options={options}
+        libs={libs}
         originJs={originJs}
         bindSubmit={(cb) => {
           outlinkHandler.current.codesandbox = cb

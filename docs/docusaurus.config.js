@@ -53,10 +53,6 @@ const config = {
     ({
       navbar: {
         title: 'docusaurus-plugin-demo-block',
-        logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
-        },
         items: [
           {
             type: 'doc',
