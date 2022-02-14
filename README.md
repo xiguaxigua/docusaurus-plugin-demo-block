@@ -1,6 +1,5 @@
 # docusaurus-plugin-demo-block
 > Use code blocks as usual and get better rendering
----
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/xiguaxigua/docusaurus-plugin-demo-block/build/master)
 ![npm](https://img.shields.io/npm/v/docusaurus-plugin-demo-block)
