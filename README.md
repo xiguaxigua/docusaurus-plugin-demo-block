@@ -26,6 +26,12 @@ npm i docusaurus-plugin-demo-block
   ],
 ```
 
+## Example
+
+![vanilla](./assets/vanilla.jpg)
+![vue](./assets/vue.jpg)
+![react](./assets/react.jpg)
+
 ## Docs
 
 https://xiguaxigua.com/docusaurus-plugin-demo-block
