@@ -33,7 +33,7 @@ npm i docusaurus-plugin-demo-block
 
 ## Config
 
-you can look this [config](./src/types/option-type.d.ts) file to find which config is supported
+you can check this [config](./src/types/option-type.d.ts) file to find which config is supported
 
 ### global config
 
