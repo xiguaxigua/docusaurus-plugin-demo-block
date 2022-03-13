@@ -19,6 +19,7 @@ const DEFAULT_OPTIONS: Options = {
   showCodesandboxLink: true,
   showCopyCodeButton: true,
   showToggleButton: true,
+  supportVueComponent: false,
   vueVersion: 3,
   vueLib: VUE_LIB[3],
   reactLib:

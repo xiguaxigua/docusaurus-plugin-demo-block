@@ -51,7 +51,6 @@
     "ts-node": "^10.4.0",
     "tslib": "^2.3.1",
     "typescript": "^4.5.5",
-    "vue": "^2",
     "webpack": "^5.68.0"
   },
   "browserslist": [
@@ -64,9 +63,6 @@
     "codemirror": "^5.65.1",
     "codesandbox": "^2.2.3",
     "copy-to-clipboard": "^3.3.1"
-  },
-  "peerDependencies": {
-    "vue": "^3"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

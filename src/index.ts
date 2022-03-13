@@ -30,30 +30,5 @@ export default function demoBlock(
         name: 'plugin-demo-block',
       })
     },
-
-    configureWebpack() {
-      const vueAliasPath =
-        options.vueVersion === 2
-          ? require.resolve('vue/dist/vue.esm.js')
-          : require.resolve('vue/dist/vue.esm-bundler.js')
-      return {
-        resolve: {
-          fallback: {
-            path: require.resolve('path-browserify'),
-            assert: require.resolve('assert/'),
-            buffer: require.resolve('buffer/'),
-          },
-          alias: {
-            vue: vueAliasPath,
-          },
-        },
-        plugins: [
-          new webpack.DefinePlugin({
-            __VUE_OPTIONS_API__: true,
-            __VUE_PROD_DEVTOOLS__: true,
-          }),
-        ],
-      }
-    },
   }
 }

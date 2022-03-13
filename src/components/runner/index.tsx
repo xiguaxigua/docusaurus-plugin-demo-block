@@ -4,6 +4,8 @@ import { Options } from '../../types/option-type'
 import { sleep } from '../../utils/sleep'
 
 import './index.css'
+import { CodeType } from '../../types'
+import { getVue } from 'src/utils/load-vue'
 
 interface RunnerCompProps {
   html: string
@@ -12,6 +14,7 @@ interface RunnerCompProps {
   scope: Record<string, unknown>
   isDarkTheme: boolean
   options: Options
+  codeType: CodeType
 }
 
 const RunnerComp: FC<RunnerCompProps> = ({
@@ -21,6 +24,7 @@ const RunnerComp: FC<RunnerCompProps> = ({
   scope,
   isDarkTheme,
   options,
+  codeType,
 }) => {
   const runner = useRef<HTMLIFrameElement | HTMLDivElement>(null)
   const [height, setHeight] = useState(1)
@@ -42,6 +46,11 @@ const RunnerComp: FC<RunnerCompProps> = ({
       ${css}
     `
     contentDocument.head.appendChild(style)
+    if (codeType === 'vue' && !scope.Vue) {
+      const vueScript = contentDocument.createElement('script')
+      vueScript.src = options.vueLib
+      contentDocument.head.appendChild(vueScript)
+    }
     contentDocument.body.innerHTML = html
 
     contentDocument.querySelector('html').dataset.theme = isDarkTheme
@@ -53,22 +62,27 @@ const RunnerComp: FC<RunnerCompProps> = ({
       : 'rgb(28, 30, 33)'
 
     js = `
-    try {
-      ${js}
-    } catch (e) {
-      document.body.innerHTML = '<pre style="color: red">' + e + '</pre>'
-      console.error(e)
+    window.onload = function() {
+      try {
+        ${js}
+      } catch (e) {
+        document.body.innerHTML = '<pre style="color: red">' + e + '</pre>'
+        console.error(e)
+      }
     }
     `
 
     const script = contentDocument.createElement('script')
     script.innerHTML = js
     contentDocument.body.appendChild(script)
-
-    setHeight(contentDocument.body.scrollHeight)
+    console.log(
+      'contentDocument.body.scrollHeigh',
+      contentDocument.body.scrollHeight
+    )
+    setHeight(contentDocument.body.scrollHeight + 30)
   }
 
-  const setDivRunner = () => {
+  const setDivRunner = async () => {
     if (scope) {
       Object.keys(scope).forEach((key) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,6 +96,10 @@ const RunnerComp: FC<RunnerCompProps> = ({
     const style = document.createElement('style')
     style.innerHTML = css
     document.head.appendChild(style)
+
+    if (codeType === 'vue' && !scope.Vue) {
+      await getVue(options.vueLib)
+    }
 
     runner.current.innerHTML = html
 

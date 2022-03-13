@@ -76,6 +76,14 @@ export type Options = {
    */
   libSilenceImport?: { js?: string[]; css?: string[] }
   /**
+   * whether to support import Component [default: false]
+   * if set to true, inner code will use modules vue, it will be useful if you
+   * are developing a component library, in this case, you need to import vue
+   * in scope
+   * if set to false, inner code will use vueLib instead
+   */
+  supportVueComponent?: boolean
+  /**
    * vue version for your component [default: 3]
    */
   vueVersion?: 2 | 3

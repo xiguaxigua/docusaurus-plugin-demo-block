@@ -66,6 +66,8 @@ function DemoBlock(props: CodeBlockPropsType) {
     setCode(v)
   })
 
+  const codeType = getType(metastring)
+
   useEffect(() => {
     if (code !== children) {
       setCode(children)
@@ -81,10 +83,7 @@ function DemoBlock(props: CodeBlockPropsType) {
 
   useEffect(() => {
     ;(async () => {
-      const runtimeCode = await GET_CODE_FUNCTION[getType(metastring)](
-        code,
-        options
-      )
+      const runtimeCode = await GET_CODE_FUNCTION[codeType](code, options)
       setRuntimeCode(runtimeCode)
     })()
   }, [code])
@@ -135,6 +134,7 @@ function DemoBlock(props: CodeBlockPropsType) {
             isDarkTheme={isDarkTheme}
             scope={scope}
             options={options}
+            codeType={codeType}
           />
         </div>
       </div>
